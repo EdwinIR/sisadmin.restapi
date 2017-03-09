@@ -1,0 +1,41 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" 
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans     
+        http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+		http://www.springframework.org/schema/mvc
+		http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd
+	    http://www.springframework.org/schema/context 
+        http://www.springframework.org/schema/context/spring-context-3.1.xsd">
+        
+        <import resource="classpath:com/sisadmin/spring/dal-application-context.xml"/>
+        <import resource="classpath:com/sisadmin/spring/services-application-context.xml"/>
+        <!-- <import resource="classpath:com/cimait/invoicec/core/spring/conector-application-context.xml"/> -->
+			
+		<!-- Habilitar Anotaciones ResponseBody, RequestBody, Valid, para llamados REST -->	
+		<mvc:annotation-driven>		
+			<mvc:message-converters>
+    			<bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+        			<property name="objectMapper">
+            				<bean class="com.sisadmin.api.config.HibernateAwareObjectMapper" />
+        			</property>
+    			</bean>
+			</mvc:message-converters>		
+		</mvc:annotation-driven>
+				
+		<!-- Habilitar para servir contenido estatico en carpeta indicada -->
+		<mvc:resources mapping="/resources/**" location="/public/" />	
+		<context:component-scan base-package="com.sisadmin" />
+ 		
+		<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+			<property name="locations">
+				<list>
+					<value>file:${sisadmin.context}/dal.properties</value>
+					<value>file:${sisadmin.context}/services.properties</value>
+				</list>
+			</property>
+		</bean>	
+
+</beans>
